@@ -70,7 +70,6 @@ Genom att använda en IAM-användare med begränsade rättigheter kan du arbeta 
 
 [Till toppen](#aws---inlämningsuppgift-1)
 ## CloudFormation Template
-
 I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** är skriven i **YAML**, vilket står för "YAML Ain't Markup Language". YAML är ett lättläst format för att skriva konfigurationer, vilket gör det enkelt att definiera strukturer och hierarkier.
 
 En **CloudFormation Template** består av olika delar, såsom parametrar, resurser och utdata:
@@ -83,8 +82,10 @@ Nedan är en tom CloudFormation-template som vi kommer fylla i steg för steg un
 
 Börja med att skapa en ny fil för CloudFormation-templaten. Du kan namnge filen `CloudFormation.yaml`.
 
-I denna fil kommer vi att definiera en CloudFormation-template som skapar en säker och skalbar hosting-miljö för en webbapplikation. Denna template kommer att inkludera följande resurser:
+I denna fil kommer vi att definiera en CloudFormation-template som skapar en säker och skalbar hosting-miljö för en webbapplikation. Följande resurser är några av de resurser som ingår i templaten:
 
+- **VPC**: En Virtual Private Cloud för att isolera resurser.
+- **Subnet**: En subnet inom VPC för att placera resurser.
 - **Security Group**: För att hantera säkerhetsregler för instanserna.
 - **Launch Template**: För att definiera konfigurationen av instanserna som ska lanseras.
 - **Target Group**: För att gruppera instanser som hanteras av load balancer.
@@ -101,6 +102,8 @@ Parameters:
   # Definiera ingångsparametrar som kan anpassas vid körning av templaten
 
 Resources:
+  # VPC
+  # Subnet
   # Security Group
   # Launch Template
   # Target Group
