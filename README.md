@@ -51,7 +51,7 @@ För att arbeta säkert med AWS CLI skapar vi en IAM-användare för att begrän
 
 [Till toppen](#aws---inlämningsuppgift-1)
 
-### Installation och konfiguration av AWS CLI
+## Installation och konfiguration av AWS CLI
 
 Efter att du har installerat AWS CLI, behöver du konfigurera det för att kunna arbeta med dina AWS-tjänster:
 
