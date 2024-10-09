@@ -51,3 +51,29 @@ Efter att du har installerat AWS CLI, behöver du konfigurera det för att kunna
    - **Default output format**: Ange `json` för att få svar i JSON-format.
 
 Genom att använda en IAM-användare med begränsade rättigheter, kan du arbeta säkert och förhindra att obehörig åtkomst ges till ditt AWS-konto.
+
+
+## CloudFormation Template
+
+I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** består av olika delar, såsom parametrar, resurser och utdata.
+
+Nedan är en tom CloudFormation-template som vi kommer fylla i steg för steg under guiden. Varje del av templaten beskriver olika aspekter av infrastrukturen som vi skapar. Du kommer att fylla i parametrar och resurser allt eftersom vi bygger upp din hosting-miljö.
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Här skriver man in en beskrivning om vad templaten gör, t.ex. "Skapar en säker och skalbar hosting-miljö för en webbapplikation".
+
+Parameters:
+  # Här definierar du ingångsparametrar som användaren kan ange vid körning av templaten.
+  # Exempel: region, instansstorlek eller VPC-ID. Dessa hjälper till att anpassa din infrastruktur.
+
+Resources:
+  # Här specificerar du alla de resurser som kommer att skapas av CloudFormation.
+  # Det kan inkludera resurser som EC2-instanser, RDS-databaser, S3-buckets, säkerhetsgrupper, etc.
+  # Varje resurs måste beskrivas med detaljerad konfiguration för att AWS ska kunna provisionera dem.
+
+Outputs:
+  # Här anger du vad som ska visas som utdata efter att templaten körts.
+  # Exempel kan vara IP-adresser för EC2-instanser, ARN för resurser eller andra viktiga informationer om resurserna som skapats.
+  ```
+  
