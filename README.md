@@ -84,3 +84,23 @@ Outputs:
   # Här anger du vad som ska visas som utdata efter att templaten körts.
   # Exempel kan vara IP-adresser för EC2-instanser, ARN för resurser eller andra viktiga informationer om resurserna som skapats.
   ```
+## Skapa CloudFormation-template
+
+Börja med att skapa en ny fil för CloudFormation-templaten. Du kan namnge filen `CloudFormation.yaml`. 
+
+I denna fil kommer vi att definiera en tom CloudFormation-template som skapar en säker och skalbar hosting-miljö för en webbapplikation. Nedan är innehållet för filen:
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Denna template skapar en säker och skalbar hosting-miljö för en webbapplikation.
+
+Parameters:
+  # Definiera ingångsparametrar som kan anpassas vid körning av templaten
+
+Resources:
+  # Specifiera de resurser som ska skapas, t.ex. EC2-instanser, S3-buckets, etc.
+
+Outputs:
+  # Anger vad som ska visas som utdata efter att templaten körts
+  ```
+  
