@@ -10,6 +10,14 @@ För att följa denna guide och skapa en robust, säker och skalbar hosting-milj
 
 Notera att **AWS CLI** kan kräva installation av **Python** för att fungera beroende på ditt operativsystem och den version av CLI du använder.
 
+### Verifiera installationen av AWS CLI
+
+För att kontrollera att AWS CLI har installerats korrekt, kan du köra följande kommando i terminalen:
+
+```bash
+aws --version
+```
+
 
 ## Sätta upp ett IAM-konto för AWS CLI
 
@@ -55,7 +63,7 @@ Genom att använda en IAM-användare med begränsade rättigheter, kan du arbeta
 
 ## CloudFormation Template
 
-I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** är skriven i **YAML**, vilket står för "YAML Ain't Markup Language". YAML är ett lättläst format för att skriva konfigurationer, vilket gör det enkelt att definiera strukturer och hierarkier. 
+I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** är skriven i **YAML**, vilket står för "YAML Ain't Markup Language". YAML är ett lättläst format för att skriva konfigurationer, vilket gör det enkelt att definiera strukturer och hierarkier.
 
 En **CloudFormation Template** består av olika delar, såsom parametrar, resurser och utdata:
 
@@ -63,32 +71,19 @@ En **CloudFormation Template** består av olika delar, såsom parametrar, resurs
 - **Resurser**: Specifierar de AWS-resurser som ska skapas, såsom EC2-instanser, S3-buckets och databaser.
 - **Utdata**: Anger vad som ska visas som resultat efter att templaten har körts, t.ex. IP-adresser och andra viktiga informationer om skapade resurser.
 
-
-
 Nedan är en tom CloudFormation-template som vi kommer fylla i steg för steg under guiden. Varje del av templaten beskriver olika aspekter av infrastrukturen som vi skapar. Du kommer att fylla i parametrar och resurser allt eftersom vi bygger upp din hosting-miljö.
-
-```yaml
-AWSTemplateFormatVersion: '2010-09-09'
-Description: Här skriver man in en beskrivning om vad templaten gör, t.ex. "Skapar en säker och skalbar hosting-miljö för en webbapplikation".
-
-Parameters:
-  # Här definierar du ingångsparametrar som användaren kan ange vid körning av templaten.
-  # Exempel: region, instansstorlek eller VPC-ID. Dessa hjälper till att anpassa din infrastruktur.
-
-Resources:
-  # Här specificerar du alla de resurser som kommer att skapas av CloudFormation.
-  # Det kan inkludera resurser som EC2-instanser, RDS-databaser, S3-buckets, säkerhetsgrupper, etc.
-  # Varje resurs måste beskrivas med detaljerad konfiguration för att AWS ska kunna provisionera dem.
-
-Outputs:
-  # Här anger du vad som ska visas som utdata efter att templaten körts.
-  # Exempel kan vara IP-adresser för EC2-instanser, ARN för resurser eller andra viktiga informationer om resurserna som skapats.
-  ```
-## Skapa CloudFormation-template
 
 Börja med att skapa en ny fil för CloudFormation-templaten. Du kan namnge filen `CloudFormation.yaml`. 
 
-I denna fil kommer vi att definiera en tom CloudFormation-template som skapar en säker och skalbar hosting-miljö för en webbapplikation. Nedan är innehållet för filen:
+I denna fil kommer vi att definiera en CloudFormation-template som skapar en säker och skalbar hosting-miljö för en webbapplikation. Denna template kommer att inkludera följande resurser:
+
+- **Security Group**: För att hantera säkerhetsregler för instanserna.
+- **Launch Template**: För att definiera konfigurationen av instanserna som ska lanseras.
+- **Target Group**: För att gruppera instanser som hanteras av load balancer.
+- **Application Load Balancer**: För att hantera och fördela trafiken mellan instanser.
+- **Auto Scaling Group**: För att automatiskt skala upp och ner antalet instanser baserat på belastning.
+
+Nedan är innehållet för filen:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
@@ -98,9 +93,11 @@ Parameters:
   # Definiera ingångsparametrar som kan anpassas vid körning av templaten
 
 Resources:
-  # Specifiera de resurser som ska skapas, t.ex. EC2-instanser, S3-buckets, etc.
+  # Security Group
+  # Launch Template
+  # Target Group
+  # Application Load Balancer
+  # Auto Scaling Group
 
 Outputs:
   # Anger vad som ska visas som utdata efter att templaten körts
-  ```
-  
