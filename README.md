@@ -1,3 +1,4 @@
+<a name="top"></a>
 # AWS - Inlämningsuppgift 1
 
 ## Innehållsförteckning
@@ -24,8 +25,6 @@ För att kontrollera att AWS CLI har installerats korrekt, kan du köra följand
 ```bash
 aws --version
 ```
-[Till toppen](#aws---inlämningsuppgift-1)
-
 ## Sätta upp ett IAM-konto för AWS CLI
 
 För att arbeta säkert med AWS CLI skapar vi en IAM-användare för att begränsa rättigheterna och minimera riskerna med att använda root-kontot. Följ dessa steg för att sätta upp ett säkert IAM-konto:
@@ -50,7 +49,6 @@ För att arbeta säkert med AWS CLI skapar vi en IAM-användare för att begrän
    - Lägg till en beskrivning för access keyn, t.ex. "aws cli".
    - Anteckna **Access key** och **Secret access key**, då dessa används i nästa steg.
 
-[Till toppen](#aws---inlämningsuppgift-1)
 
 ## Installation och konfiguration av AWS CLI
 
@@ -69,7 +67,6 @@ Efter att du har installerat AWS CLI, behöver du konfigurera det för att kunna
 
 Genom att använda en IAM-användare med begränsade rättigheter kan du arbeta säkert och förhindra att obehörig åtkomst ges till ditt AWS-konto.
 
-[Till toppen](#aws---inlämningsuppgift-1)
 ## CloudFormation Template
 I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** är skriven i **YAML**, vilket står för "YAML Ain't Markup Language". YAML är ett lättläst format för att skriva konfigurationer, vilket gör det enkelt att definiera strukturer och hierarkier.
 
@@ -108,7 +105,6 @@ Resources:
 #Outputs: "Utdata behövs inte i början av guiden."
   # Anger vad som ska visas som utdata efter att templaten körts
 ```
-[Till toppen](#aws---inlämningsuppgift-1)
 
 
 # Skapa en VPC för host-miljön
@@ -387,3 +383,6 @@ aws cloudformation delete-stack --stack-name uppgift-1
 ```
 
 [Till toppen av denna sektion](#innehållsförteckning-för-vpc-sektionen)
+
+
+<a href="#top" style="position:fixed;bottom:10px;right:10px;font-size:20px;">⬆️</a>
