@@ -118,6 +118,7 @@ Resources:
 - [Skapa en VPC](#skapa-en-vpc)
 - [Skapa en Internet Gateway för VPC:n](#skapa-en-internet-gateway-för-vpcn)
 - [Koppla Internet Gateway till VPC](#koppla-internet-gateway-till-vpc)
+- [Skapa subnets för VPC](#skapa-subnets-för-vpc)
 
 ## Skapa en VPC
 
@@ -376,15 +377,6 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 3. Välj "Subnets" i sidomenyn.
 4. Kontrollera att dina subnät (`Uppgift-1-Public-Subnet-A`, `B`, och `C`) finns listade där och är associerade med rätt Availability Zones.
 
-**Via terminal:**
-
-Kör följande kommando för att lista alla subnät som är kopplade till din VPC:
-
-```bash
-aws ec2 describe-subnets --filters "Name=vpc-id,Values=Uppgift-1-VPC"
-```
-
-Om subnäten har skapats korrekt bör du se dem i svaret.
 
 ### Ta bort subnät och resurser
 
@@ -393,3 +385,5 @@ Kom ihåg att ta bort stacken när du inte längre behöver subnäten:
 ```bash
 aws cloudformation delete-stack --stack-name uppgift-1
 ```
+
+[Till toppen av denna sektion](#innehållsförteckning-för-vpc-sektionen)
