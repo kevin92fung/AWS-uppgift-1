@@ -1,5 +1,11 @@
 # AWS - Inlämningsuppgift 1
 
+## Innehållsförteckning
+- [Skapa en robust, säker och skalbar hosting-miljö för en webbapplikation](#skapa-en-robust-säker-och-skalbar-hosting-miljö-för-en-webbapplikation)
+- [Sätta upp ett IAM-konto för AWS CLI](#sätta-upp-ett-iam-konto-för-aws-cli)
+- [Installation och konfiguration av AWS CLI](#installation-och-konfiguration-av-aws-cli)
+- [CloudFormation Template](#cloudformation-template)
+
 ## Skapa en robust, säker och skalbar hosting-miljö för en webbapplikation
 
 För att följa denna guide och skapa en robust, säker och skalbar hosting-miljö för en webbapplikation som innehåller ditt namn behöver följande tjänster och applikationer vara konfigurerade och installerade:
@@ -17,7 +23,6 @@ För att kontrollera att AWS CLI har installerats korrekt, kan du köra följand
 ```bash
 aws --version
 ```
-
 
 ## Sätta upp ett IAM-konto för AWS CLI
 
@@ -58,8 +63,7 @@ Efter att du har installerat AWS CLI, behöver du konfigurera det för att kunna
    - **Default region name**: Ange `eu-west-1` (för att hålla sig inom samma Free Tier-region som guiden).
    - **Default output format**: Ange `json` för att få svar i JSON-format.
 
-Genom att använda en IAM-användare med begränsade rättigheter, kan du arbeta säkert och förhindra att obehörig åtkomst ges till ditt AWS-konto.
-
+Genom att använda en IAM-användare med begränsade rättigheter kan du arbeta säkert och förhindra att obehörig åtkomst ges till ditt AWS-konto.
 
 ## CloudFormation Template
 
@@ -73,7 +77,7 @@ En **CloudFormation Template** består av olika delar, såsom parametrar, resurs
 
 Nedan är en tom CloudFormation-template som vi kommer fylla i steg för steg under guiden. Varje del av templaten beskriver olika aspekter av infrastrukturen som vi skapar. Du kommer att fylla i parametrar och resurser allt eftersom vi bygger upp din hosting-miljö.
 
-Börja med att skapa en ny fil för CloudFormation-templaten. Du kan namnge filen `CloudFormation.yaml`. 
+Börja med att skapa en ny fil för CloudFormation-templaten. Du kan namnge filen `CloudFormation.yaml`.
 
 I denna fil kommer vi att definiera en CloudFormation-template som skapar en säker och skalbar hosting-miljö för en webbapplikation. Denna template kommer att inkludera följande resurser:
 
@@ -101,3 +105,8 @@ Resources:
 
 Outputs:
   # Anger vad som ska visas som utdata efter att templaten körts
+```
+
+---
+
+[Till toppen](#aws---inlämningsuppgift-1)
