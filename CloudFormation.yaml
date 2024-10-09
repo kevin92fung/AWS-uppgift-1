@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Denna template skapar en säker och skalbar hosting-miljö för en webbapplikation.
+
+Resources:
+  # Skapa VPC
+  Uppgift1VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: Uppgift-1-VPC
+
+  # Skapa Internet Gateway
+  Uppgift1InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Uppgift-1-Internet-Gateway
+
+  # Koppla Internet Gateway till VPC
+  Uppgift1AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref Uppgift1VPC
+      InternetGatewayId: !Ref Uppgift1InternetGateway
+      
+  # Skapa Public Subnets
+  Uppgift1PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Uppgift1VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: eu-west-1a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Uppgift-1-Public-Subnet-A
+
+  Uppgift1PublicSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Uppgift1VPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: eu-west-1b
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Uppgift-1-Public-Subnet-B
+
+  Uppgift1PublicSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Uppgift1VPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: eu-west-1c
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Uppgift-1-Public-Subnet-C
+
+#Outputs:
+  # Anger vad som ska visas som utdata efter att templaten körts
