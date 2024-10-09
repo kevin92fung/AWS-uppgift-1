@@ -55,7 +55,15 @@ Genom att använda en IAM-användare med begränsade rättigheter, kan du arbeta
 
 ## CloudFormation Template
 
-I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** består av olika delar, såsom parametrar, resurser och utdata.
+I denna guide kommer vi också att använda oss av en **CloudFormation Template** där vi beskriver de resurser som krävs för att skapa vår hosting-miljö. En **CloudFormation Template** är skriven i **YAML**, vilket står för "YAML Ain't Markup Language". YAML är ett lättläst format för att skriva konfigurationer, vilket gör det enkelt att definiera strukturer och hierarkier. 
+
+En **CloudFormation Template** består av olika delar, såsom parametrar, resurser och utdata:
+
+- **Parametrar**: Definierar ingångsvärden som kan anpassas när templaten körs.
+- **Resurser**: Specifierar de AWS-resurser som ska skapas, såsom EC2-instanser, S3-buckets och databaser.
+- **Utdata**: Anger vad som ska visas som resultat efter att templaten har körts, t.ex. IP-adresser och andra viktiga informationer om skapade resurser.
+
+
 
 Nedan är en tom CloudFormation-template som vi kommer fylla i steg för steg under guiden. Varje del av templaten beskriver olika aspekter av infrastrukturen som vi skapar. Du kommer att fylla i parametrar och resurser allt eftersom vi bygger upp din hosting-miljö.
 
@@ -76,4 +84,3 @@ Outputs:
   # Här anger du vad som ska visas som utdata efter att templaten körts.
   # Exempel kan vara IP-adresser för EC2-instanser, ARN för resurser eller andra viktiga informationer om resurserna som skapats.
   ```
-  
