@@ -110,7 +110,4 @@ Resources:
 Outputs:
   # Anger vad som ska visas som utdata efter att templaten körts
 ```
-
----
-
 [Till toppen](#aws---inlämningsuppgift-1)
