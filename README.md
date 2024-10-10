@@ -465,7 +465,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ## Skapa Security Group
 
-För att säkerställa att resurser i din VPC har rätt säkerhetsinställningar kan du skapa en säkerhetsgrupp som tillåter HTTP- och SSH-trafik. Lägg till följande resurser under `Resources:` i din `CloudFormation.yaml`-fil:
+För att säkerställa att resurser i din VPC har rätt säkerhetsinställningar kan du skapa en säkerhetsgrupp som tillåter HTTP- och SSH-trafik. En säkerhetsgrupp fungerar som en virtuell brandvägg som kontrollerar inkommande och utgående trafik till och från dina resurser. Genom att tillåta HTTP- och SSH-trafik kan du säkerställa att användare kan få åtkomst till dina webbapplikationer och logga in på instanserna på ett säkert sätt.
+
+Lägg till följande resurser under Resources: i din CloudFormation.yaml-fil:
 
 ```yaml
 Resources:
@@ -522,8 +524,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 
 ## Skapa SSH Key Pair
+Innan du skapar din Launch Template behöver du skapa en SSH-key pair för att kunna logga in på dina instanser. En SSH-key pair består av en offentlig och en privat nyckel, där den offentliga nyckeln lagras i AWS och den privata nyckeln sparas lokalt på din dator. Detta gör att du kan autentisera och få åtkomst till dina EC2-instanser på ett säkert sätt.
 
-Innan du skapar din Launch Template behöver du skapa en SSH-key pair för att kunna logga in på dina instanser. Använd följande kommando för att skapa en SSH-key pair:
+Använd följande kommando för att skapa en SSH-key pair:
 
 ```bash
 aws ec2 create-key-pair --key-name sshkey --query KeyMaterial --output text > C:/adress/till/nyckel/sshkey.pem
@@ -545,7 +548,9 @@ Detta kommando gör följande:
 
 ## Skapa Launch Template
 
-Efter att du har skapat SSH-key pair kan du skapa en Launch Template. Lägg till följande resurser under `Resources:` i din `CloudFormation.yaml`-fil:
+Efter att du har skapat SSH-key pair kan du skapa en Launch Template. En Launch Template innehåller all information som behövs för att starta EC2-instanser, inklusive instanstyp, AMI, säkerhetsgrupp och andra inställningar. Genom att använda en Launch Template kan du enkelt starta nya instanser med konsekventa konfigurationer, vilket underlättar hanteringen av din infrastruktur.
+
+Lägg till följande resurser under Resources: i din CloudFormation.yaml-fil:
 
 ```yaml
 Resources:
@@ -602,8 +607,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 [⬆️ Till toppen](#top)
 
 ## Skapa Load Balancer
+För att distribuera trafik till dina instanser kan du skapa en Load Balancer. En Load Balancer fungerar som en fördelare av inkommande trafik till flera instanser, vilket förbättrar tillgängligheten och gör att du kan hantera hög trafikbelastning. Genom att använda en Load Balancer kan du också säkerställa att trafik dirigeras till friska instanser, vilket ökar systemets motståndskraft.
 
-För att distribuera trafik till dina instanser kan du skapa en Load Balancer. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+Lägg till följande kod under Resources: i din CloudFormation.yaml-fil:
 
 ```yaml
 Resources:
@@ -659,8 +665,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 [⬆️ Till toppen](#top)
 
 ## Skapa Target Group
+För att dirigera trafik till dina instanser via load balancern kan du skapa en Target Group. En Target Group är en resurs som definierar en grupp av instanser (eller andra resurser) som tar emot trafik från en load balancer. Genom att använda Target Groups kan du specificera hälsokontroller, portnummer och protokoll för att säkerställa att trafiken alltid dirigeras till friska och aktiva instanser.
 
-För att dirigera trafik till dina instanser via load balancern kan du skapa en Target Group. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+Lägg till följande kod under Resources: i din CloudFormation.yaml-fil:
 
 ```yaml
 Resources:
@@ -721,7 +728,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ## Skapa Listener för Load Balancer
 
-För att dirigera inkommande trafik till din Target Group via Load Balancern kan du skapa en Listener. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+För att dirigera inkommande trafik till din Target Group via Load Balancern kan du skapa en Listener. En Listener är en process som kontrollerar för inkommande trafik på en specifik port och protokoll och vidarebefordrar denna trafik till en specifik Target Group baserat på angivna regler. Detta möjliggör lastbalansering av trafik över flera instanser som är registrerade i Target Group.
+
+Lägg till följande kod under Resources: i din CloudFormation.yaml-fil:
 
 ```yaml
 Resources:
@@ -768,7 +777,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ## Skapa Auto Scaling Group
 
-För att automatiskt hantera instanser i din miljö kan du skapa en Auto Scaling Group. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+För att automatiskt hantera instanser i din miljö kan du skapa en Auto Scaling Group. Genom att använda en Auto Scaling Group kan du säkerställa att du har rätt antal instanser som körs vid alla tider, baserat på den belastning och trafik som din applikation hanterar. Detta gör det möjligt att skala upp eller ner efter behov, vilket bidrar till kostnadseffektivitet och resurseffektivitet.
+
+Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
 
 ```yaml
 Resources:
@@ -833,7 +844,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ## Skapa Scaling Policy för Auto Scaling Group
 
-För att automatiskt skala instanser baserat på CPU-användning kan du skapa en scaling policy. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+För att automatiskt skala instanser baserat på CPU-användning behöver vi skapa en scaling policy. Denna policy kommer att definiera hur vår Auto Scaling Group ska reagera på förändringar i belastningen. Genom att implementera en scaling policy kan vi säkerställa att vår applikation alltid har tillräckligt med resurser för att hantera den aktuella trafiken, vilket förbättrar både prestanda och tillförlitlighet.
+
+Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
 
 ```yaml
 Resources:
