@@ -20,6 +20,7 @@
 - [Skapa Listener för Load Balancer](#skapa-listener-för-load-balancer)
 - [Skapa Auto Scaling Group](#skapa-auto-scaling-group)
 - [Skapa Scaling Policy för Auto Scaling Group](#skapa-auto-scaling-group)
+- [Rensa Upp Efter Dig](#rensa-upp-efter-dig)
 
 ## Skapa en robust, säker och skalbar hosting-miljö för en webbapplikation
 
@@ -893,5 +894,28 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
    - Välj "Auto Scaling Groups" i sidomenyn.
    - Välj `AutoScalingGroupUppgift1` och navigera till fliken "Scaling Policies".
    - Bekräfta att `ScalingPolicyUppgift1` finns i listan över scaling policies.
+
+[⬆️ Till toppen](#top)
+
+## Rensa Upp Efter Dig
+
+När du är klar med att använda dina resurser i AWS är det viktigt att rensa upp för att undvika onödiga kostnader. Ett effektivt sätt att ta bort alla resurser som skapats under din CloudFormation-stack är att använda AWS CLI för att radera hela stacken. Genom att ta bort stacken kommer alla resurser som skapats inom den automatiskt att tas bort.
+
+### Så här gör du för att ta bort din stack:
+
+Kör följande kommando i din terminal:
+
+```bash
+aws cloudformation delete-stack --stack-name uppgift-1
+```
+
+### Verifiera Borttagningen
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till CloudFormation-tjänsten.**
+3. **Kontrollera att stacken inte längre finns i listan över aktiva stackar.**
+
+Genom att följa dessa steg säkerställer du att alla resurser kopplade till din stack tas bort på ett effektivt sätt, vilket hjälper dig att hålla kostnaderna nere och din miljö organiserad.
+
 
 [⬆️ Till toppen](#top)
