@@ -7,6 +7,19 @@
 - [Installation och konfiguration av AWS CLI](#installation-och-konfiguration-av-aws-cli)
 - [CloudFormation Template](#cloudformation-template)
 - [Skapa en VPC för host-miljön](#skapa-en-vpc-för-host-miljön)
+  - [Skapa en VPC](#skapa-en-vpc)
+  - [Skapa en Internet Gateway för VPC:n](#skapa-en-internet-gateway-för-vpcn)
+  - [Koppla Internet Gateway till VPC](#koppla-internet-gateway-till-vpc)
+  - [Skapa subnets för VPC](#skapa-subnets-för-vpc)
+  - [Skapa och Konfigurera Route Tables för VPC](#skapa-och-konfigurera-route-tables-för-vpc)
+- [Skapa Security Group](#skapa-security-group)
+- [Skapa SSH Key Pair](#skapa-ssh-key-pair)
+- [Skapa Launch Template](#skapa-launch-template)
+- [Skapa Load Balancer](#skapa-load-balancer)
+- [Skapa Target Group](#skapa-target-group)
+- [Skapa Listener för Load Balancer](#skapa-listener-för-load-balancer)
+- [Skapa Auto Scaling Group](#skapa-auto-scaling-group)
+- [Skapa Scaling Policy för Auto Scaling Group](#skapa-auto-scaling-group)
 
 ## Skapa en robust, säker och skalbar hosting-miljö för en webbapplikation
 
@@ -159,26 +172,10 @@ Detta kommando kommer att använda din `CloudFormation.yaml`-fil för att skapa 
 
 ### Verifiera att VPC har skapats
 
-**Via portalen:**
-
 1. Logga in på AWS Management Console.
 2. Navigera till VPC-tjänsten.
 3. Välj "Your VPCs" i sidomenyn.
 4. Kontrollera att `Uppgift-1-VPC` finns listad där.
-
-**Via terminal:**
-
-Kör följande kommando för att lista alla VPC:er i ditt konto:
-
-```bash
-aws ec2 describe-vpcs --filters "Name=tag:Name,Values=Uppgift-1-VPC"
-```
-
-Om VPC:n har skapats framgångsrikt bör du se detaljer om `Uppgift-1-VPC` i svaret.
-
-### Ta bort VPC och resurser
-
-När du är klar med att arbeta med din VPC är det viktigt att ta bort den för att minimera kostnader. Du kan ta bort stacken med följande kommando:
 
 ```bash
 aws cloudformation delete-stack --stack-name uppgift-1
@@ -225,32 +222,10 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera att Internet Gateway har skapats
 
-**Via portalen:**
-
 1. Logga in på AWS Management Console.
 2. Navigera till VPC-tjänsten.
 3. Välj "Internet Gateways" i sidomenyn.
 4. Kontrollera att `Uppgift-1-Internet-Gateway` finns listad där.
-
-**Via terminal:**
-
-Kör följande kommando för att lista alla Internet Gateways i ditt konto:
-
-```bash
-aws ec2 describe-internet-gateways --filters "Name=tag:Name,Values=Uppgift-1-Internet-Gateway"
-```
-
-Om Internet Gateway:n har skapats framgångsrikt bör du se detaljer om `Uppgift-1-Internet-Gateway` i svaret.
-
-### Ta bort Internet Gateway och resurser
-
-För att minimera kostnader är det också viktigt att ta bort Internet Gateway:n när den inte längre behövs. Använd följande kommando för att ta bort stacken:
-
-```bash
-aws cloudformation delete-stack --stack-name uppgift-1
-```
-
-Detta kommer att ta bort alla resurser som skapades, inklusive Internet Gateway:n.
 
 [Till toppen av denna sektion](#skapa-en-vpc-för-host-miljön)
 
@@ -291,20 +266,10 @@ Detta kommando kommer att uppdatera stacken och koppla Internet Gateway:n till V
 
 ### Verifiera att Gateway Attachment har skapats
 
-**Via portalen:**
-
 1. Logga in på AWS Management Console.
 2. Navigera till VPC-tjänsten.
 3. Välj "Your VPCs" i sidomenyn.
 4. Välj din VPC (`Uppgift-1-VPC`) och kontrollera fliken "Resource map" för att se att `Uppgift-1-Internet-Gateway` är kopplad under Network connections.
-
-### Ta bort Gateway Attachment och resurser
-
-När du är klar med att arbeta med din VPC och Internet Gateway, kom ihåg att ta bort stacken för att minimera kostnader. Använd följande kommando för att ta bort stacken:
-
-```bash
-aws cloudformation delete-stack --stack-name uppgift-1
-```
 
 [Till toppen av denna sektion](#innehållsförteckning-för-vpc-sektionen)
 
@@ -372,21 +337,10 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera att subnät har skapats
 
-**Via portalen:**
-
 1. Logga in på AWS Management Console.
 2. Navigera till VPC-tjänsten.
 3. Välj "Subnets" i sidomenyn.
 4. Kontrollera att dina subnät (`Uppgift-1-Public-Subnet-A`, `B`, och `C`) finns listade där och är associerade med rätt Availability Zones.
-
-
-### Ta bort subnät och resurser
-
-Kom ihåg att ta bort stacken när du inte längre behöver subnäten:
-
-```bash
-aws cloudformation delete-stack --stack-name uppgift-1
-```
 
 [Till toppen av denna sektion](#innehållsförteckning-för-vpc-sektionen)
 
@@ -402,7 +356,7 @@ När dina subnät är skapade, behöver vi skapa en Route Table för att diriger
 Resources:
     # Tidigare definierade resurser...
   ...
-  
+
   # Skapa Route Table för Public Subnets
   PublicRouteTableUppgift1:
     Type: AWS::EC2::RouteTable
@@ -499,10 +453,6 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiering av Samtliga Resurser
 
-För att verifiera att alla resurser har skapats korrekt kan du använda följande steg:
-
-### Genom AWS Management Console
-
 1. **Logga in på AWS Management Console.**
 2. **Navigera till VPC-tjänsten.**
 3. **Kontrollera Route Tables:**
@@ -511,40 +461,421 @@ För att verifiera att alla resurser har skapats korrekt kan du använda följan
 4. **Kontrollera Subnet Associationer:**
    - Under "Route Tables", välj `PublicRouteTableUppgift1` och kontrollera att de offentliga subnäten (`PublicSubnetAUppgift1`, `PublicSubnetBUppgift1`, och `PublicSubnetCUppgift1`) är korrekt kopplade.
 
-### Genom AWS CLI
-
-1. **Verifiera Route Table:**
-
-   För att säkerställa att din route har skapats korrekt kan du använda följande kommando:
-
-   ```bash
-   aws ec2 describe-route-tables --route-table-ids $(aws ec2 describe-route-tables --filters "Name=tag:Name,Values=PublicRouteTableUppgift1" --query "RouteTables[0].RouteTableId" --output text) --query "RouteTables[0].Routes"
-   ```
-
-   Bekräfta att det finns en route med destination `0.0.0.0/0` och att den pekar på din Internet Gateway.
-
-2. **Verifiera Subnet Associationer:**
-
-   Du kan kontrollera associationerna mellan subnäten och route table:n med följande kommando:
-
-   ```bash
-   aws ec2 describe-subnet-route-table-associations --route-table-id $(aws ec2 describe-route-tables --filters "Name=tag:Name,Values=PublicRouteTableUppgift1" --query "RouteTables[0].RouteTableId" --output text)
-   ```
-
-   Bekräfta att alla offentliga subnät (`PublicSubnetAUppgift1`, `PublicSubnetBUppgift1`, och `PublicSubnetCUppgift1`) är listade i associationerna.
-
-## Ta bort Stack
-
-När du är klar med att arbeta med din stack och vill minimera kostnader kan du ta bort stacken med följande kommando:
-
-```bash
-aws cloudformation delete-stack --stack-name uppgift-1
-```
-
-Detta kommando kommer att ta bort alla resurser som skapats i samband med stacken, inklusive route tables och subnätsassociationer.
-
 [Till toppen av denna sektion](#innehållsförteckning-för-vpc-sektionen)
 
+## Skapa Security Group
 
+För att säkerställa att resurser i din VPC har rätt säkerhetsinställningar kan du skapa en säkerhetsgrupp som tillåter HTTP- och SSH-trafik. Lägg till följande resurser under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Security Group
+  SecurityGroupUppgift1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH access
+      VpcId: !Ref VPCUppgift1  # Hänvisa till VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  # Tillåt SSH från alla IP-adresser (kan begränsas)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  # Tillåt HTTP från alla IP-adresser (kan begränsas)
+      Tags:
+        - Key: Name
+          Value: SecurityGroupUppgift1
+```
+
+### Förklaring av Security Group-resursen:
+
+- **Type**: `AWS::EC2::SecurityGroup` anger att vi skapar en säkerhetsgrupp.
+- **GroupDescription**: En beskrivning av vad säkerhetsgruppen gör.
+- **VpcId**: `!Ref VPCUppgift1` refererar till ID:t för den VPC där säkerhetsgruppen ska skapas.
+- **SecurityGroupIngress**: En lista över regler för inkommmande trafik:
+  - För SSH (port 22) tillåts trafik från alla IP-adresser.
+  - För HTTP (port 80) tillåts också trafik från alla IP-adresser.
+- **Tags**: Används för att namnge säkerhetsgruppen, vilket gör det enklare att identifiera den i AWS-konsolen.
+
+### Provisionera Security Group med AWS CLI
+
+När du har lagt till säkerhetsgruppens resurser kan du provisionera dem genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera att säkerhetsgruppen har skapats
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Security Groups:**
+   - Välj "Security Groups" i sidomenyn.
+   - Bekräfta att `SecurityGroupUppgift1` finns med regler för HTTP och SSH.
+
+[⬆️ Till toppen](#top)
+
+
+## Skapa SSH Key Pair
+
+Innan du skapar din Launch Template behöver du skapa en SSH-key pair för att kunna logga in på dina instanser. Använd följande kommando för att skapa en SSH-key pair:
+
+```bash
+aws ec2 create-key-pair --key-name sshkey --query KeyMaterial --output text > C:/adress/till/nyckel/sshkey.pem
+```
+
+Detta kommando gör följande:
+- Skapar en SSH-key pair med namnet `sshkey`.
+- Hämtar den privata nyckeln och sparar den på din lokala dator i den angivna sökvägen (`C:/adress/till/nyckel/sshkey.pem`).
+
+### Verifiera SSH Key Pair på AWS
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Key Pairs:**
+   - Välj "Key Pairs" i sidomenyn under "Network & Security".
+   - Bekräfta att `sshkey` finns i listan över nyckelpar.
+
+[⬆️ Till toppen](#top)
+
+## Skapa Launch Template
+
+Efter att du har skapat SSH-key pair kan du skapa en Launch Template. Lägg till följande resurser under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Launch Template
+  LaunchTemplateUppgift1:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateName: !Sub '${AWS::StackName}-LaunchTemplate'  # Dynamiskt namn baserat på stacknamn
+      LaunchTemplateData:
+        InstanceType: t2.micro  # Typ av instans
+        ImageId: !Ref LatestAmiId  # Referens till senaste AMI-ID
+        KeyName: sshkey  # Namnet på ditt SSH-key pair
+        SecurityGroupIds:
+          - !Ref SecurityGroupUppgift1  # Hänvisa till säkerhetsgruppen
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            dnf update && dnf install nginx -y
+            systemctl start nginx
+            systemctl enable nginx
+            dnf install stress -y && dnf install htop -y
+```
+
+### Förklaring av Launch Template-resursen:
+
+- **Type**: `AWS::EC2::LaunchTemplate` anger att vi skapar en launch template.
+- **LaunchTemplateName**: Dynamiskt namn baserat på stacknamnet.
+- **LaunchTemplateData**: Definierar instansens konfiguration:
+  - **InstanceType**: Typen av instans, här `t2.micro`.
+  - **ImageId**: Referensen till den senaste AMI-ID:t.
+  - **KeyName**: Namnet på SSH-key pair som skapades tidigare.
+  - **SecurityGroupIds**: Referens till den tidigare skapade säkerhetsgruppen.
+  - **UserData**: Skript som körs vid start av instansen för att installera och konfigurera Nginx samt andra verktyg.
+
+### Provisionera Launch Template med AWS CLI
+
+När du har lagt till Launch Template-resurserna kan du provisionera dem genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera Launch Template
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Launch Templates:**
+   - Välj "Launch Templates" i sidomenyn under "Instances".
+   - Bekräfta att Launch Template med namnet `${AWS::StackName}-LaunchTemplate` finns i listan.
+
+[⬆️ Till toppen](#top)
+
+## Skapa Load Balancer
+
+För att distribuera trafik till dina instanser kan du skapa en Load Balancer. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Load Balancer
+  LoadBalancerUppgift1:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: LoadBalancerUppgift1
+      Subnets:
+        - !Ref PublicSubnetAUppgift1
+        - !Ref PublicSubnetBUppgift1
+        - !Ref PublicSubnetCUppgift1
+      SecurityGroups:
+        - !Ref SecurityGroupUppgift1
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '60'
+      Tags:
+        - Key: Name
+          Value: LoadBalancerUppgift1
+```
+
+### Förklaring av Load Balancer-resursen:
+
+- **Type**: `AWS::ElasticLoadBalancingV2::LoadBalancer` anger att vi skapar en load balancer.
+- **Name**: Namnet på load balancer.
+- **Subnets**: Referenser till de offentliga subnäten där load balancer ska distribueras.
+- **SecurityGroups**: Referens till säkerhetsgruppen som tillåter trafik.
+- **Scheme**: Anger att load balancer är "internet-facing".
+- **LoadBalancerAttributes**: Definierar attribut för load balancer, som t.ex. idle timeout.
+- **Tags**: Används för att namnge load balancer, vilket gör det enklare att identifiera den.
+
+### Provisionera Load Balancer med AWS CLI
+
+När du har lagt till Load Balancer-resurserna kan du provisionera dem genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera Load Balancer
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Load Balancers:**
+   - Välj "Load Balancers" i sidomenyn under "Load Balancing".
+   - Bekräfta att `LoadBalancerUppgift1` finns i listan över load balancers.
+
+[⬆️ Till toppen](#top)
+
+## Skapa Target Group
+
+För att dirigera trafik till dina instanser via load balancern kan du skapa en Target Group. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Target Group
+  TargetGroupUppgift1:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: TargetGroupUppgift1
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VPCUppgift1
+      TargetType: instance
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Tags:
+        - Key: Name
+          Value: TargetGroupUppgift1
+```
+
+### Förklaring av Target Group-resursen:
+
+- **Type**: `AWS::ElasticLoadBalancingV2::TargetGroup` anger att vi skapar en target group.
+- **Name**: Namnet på target group.
+- **Port**: Den port som target group kommer att lyssna på (port 80 för HTTP).
+- **Protocol**: Protokollet som används för trafik (HTTP).
+- **VpcId**: Referens till VPC:n där target group ska skapas.
+- **TargetType**: Anger att vi riktar trafik till instanser.
+- **HealthCheckIntervalSeconds**: Intervallet i sekunder mellan hälsokontroller.
+- **HealthCheckProtocol**: Protokollet som används för hälsokontroller (HTTP).
+- **HealthCheckTimeoutSeconds**: Timeout i sekunder för hälsokontroller.
+- **HealthyThresholdCount**: Antal framgångsrika hälsokontroller som krävs för att en instans ska anses vara frisk.
+- **UnhealthyThresholdCount**: Antal misslyckade hälsokontroller som krävs för att en instans ska anses vara ohälsosam.
+- **Tags**: Används för att namnge target group, vilket gör det enklare att identifiera den.
+
+### Provisionera Target Group med AWS CLI
+
+När du har lagt till Target Group-resurserna kan du provisionera dem genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera Target Group
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Target Groups:**
+   - Välj "Target Groups" i sidomenyn under "Load Balancing".
+   - Bekräfta att `TargetGroupUppgift1` finns i listan över target groups.
+
+[⬆️ Till toppen](#top)
+
+## Skapa Listener för Load Balancer
+
+För att dirigera inkommande trafik till din Target Group via Load Balancern kan du skapa en Listener. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Listener för Load Balancer
+  LoadBalancerListenerUppgift1:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupUppgift1
+      LoadBalancerArn: !Ref LoadBalancerUppgift1
+      Port: 80
+      Protocol: HTTP
+```
+
+### Förklaring av Listener-resursen:
+
+- **Type**: `AWS::ElasticLoadBalancingV2::Listener` anger att vi skapar en listener för load balancern.
+- **DefaultActions**: Anger åtgärder som ska utföras av listenern. Här dirigerar vi trafik till `TargetGroupUppgift1`.
+- **LoadBalancerArn**: Referens till ARN för den load balancer som listenern ska kopplas till.
+- **Port**: Den port som listenern kommer att lyssna på (port 80 för HTTP).
+- **Protocol**: Protokollet som används för inkommande trafik (HTTP).
+
+### Provisionera Listener med AWS CLI
+
+När du har lagt till Listener-resurserna kan du provisionera dem genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera Listener
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Listener:**
+   - Välj "Listeners" i sidomenyn under "Load Balancing" och sedan "Load Balancers".
+   - Bekräfta att `LoadBalancerListenerUppgift1` finns listad under den relevanta load balancern.
+
+[⬆️ Till toppen](#top)
+
+## Skapa Auto Scaling Group
+
+För att automatiskt hantera instanser i din miljö kan du skapa en Auto Scaling Group. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Auto Scaling Group
+  AutoScalingGroupUppgift1:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub '${AWS::StackName}-AutoScalingGroup'
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplateUppgift1
+        Version: !GetAtt LaunchTemplateUppgift1.LatestVersionNumber
+      MinSize: '1'
+      MaxSize: '3'
+      DesiredCapacity: '1'
+      VPCZoneIdentifier:
+        - !Ref PublicSubnetAUppgift1
+        - !Ref PublicSubnetBUppgift1
+        - !Ref PublicSubnetCUppgift1
+      TargetGroupARNs:
+        - !Ref TargetGroupUppgift1
+      Tags:
+        - Key: Name
+          Value: AutoScalingGroupUppgift1
+          PropagateAtLaunch: true
+```
+
+### Förklaring av Auto Scaling Group-resursen:
+
+- **Type**: `AWS::AutoScaling::AutoScalingGroup` anger att vi skapar en auto scaling group.
+- **AutoScalingGroupName**: Namnet på auto scaling-gruppen, här dynamiskt baserat på stacknamnet.
+- **LaunchTemplate**: Referens till den lanseringsmall som ska användas för att starta instanser.
+  - **LaunchTemplateId**: ID för den lanseringsmall som ska användas.
+  - **Version**: Referens till den senaste versionen av lanseringsmallen.
+- **MinSize**: Minimum antal instanser som alltid ska finnas i gruppen.
+- **MaxSize**: Maximum antal instanser som gruppen kan expandera till.
+- **DesiredCapacity**: Det önskade antalet instanser i gruppen.
+- **VPCZoneIdentifier**: En lista över subnät där instanserna kan placeras.
+- **TargetGroupARNs**: Referens till den target group som auto scaling-gruppen är kopplad till.
+- **Tags**: Används för att namnge auto scaling-gruppen, vilket gör det enklare att identifiera den.
+
+### Provisionera Auto Scaling Group med AWS CLI
+
+När du har lagt till Auto Scaling Group-resurserna kan du provisionera dem genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera Auto Scaling Group
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Auto Scaling Groups:**
+   - Välj "Auto Scaling Groups" i sidomenyn.
+   - Bekräfta att `AutoScalingGroupUppgift1` finns i listan över auto scaling-grupper.
+
+
+[⬆️ Till toppen](#top)
+
+## Skapa Scaling Policy för Auto Scaling Group
+
+För att automatiskt skala instanser baserat på CPU-användning kan du skapa en scaling policy. Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+
+```yaml
+Resources:
+  # Tidigare definierade resurser...
+  ...
+
+  # Skapa Scaling Policy för Auto Scaling Group
+  ScalingPolicyUppgift1:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref AutoScalingGroupUppgift1
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 50.0  # Skala vid 50% CPU-användning
+```
+
+### Förklaring av Scaling Policy-resursen:
+
+- **Type**: `AWS::AutoScaling::ScalingPolicy` anger att vi skapar en scaling policy för auto scaling-gruppen.
+- **AutoScalingGroupName**: Referens till den auto scaling-grupp som denna policy tillhör.
+- **PolicyType**: Typen av scaling policy, här `TargetTrackingScaling` som skalar instanser baserat på en definierad målnivå för en specifik metric.
+- **TargetTrackingConfiguration**: Konfigurationen för hur skalning ska ske.
+  - **PredefinedMetricSpecification**: Anger den fördefinierade metric som ska övervakas, här med `PredefinedMetricType` satt till `ASGAverageCPUUtilization` för att övervaka den genomsnittliga CPU-användningen.
+  - **TargetValue**: Den önskade målningen för CPU-användningen, i det här fallet 50%.
+
+### Provisionera Scaling Policy med AWS CLI
+
+När du har lagt till scaling policy-resursen kan du provisionera den genom att köra följande kommando:
+
+```bash
+aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgift-1
+```
+
+### Verifiera Scaling Policy
+
+1. **Logga in på AWS Management Console.**
+2. **Navigera till EC2-tjänsten.**
+3. **Kontrollera Scaling Policies:**
+   - Välj "Auto Scaling Groups" i sidomenyn.
+   - Välj `AutoScalingGroupUppgift1` och navigera till fliken "Scaling Policies".
+   - Bekräfta att `ScalingPolicyUppgift1` finns i listan över scaling policies.
 
 [⬆️ Till toppen](#top)
