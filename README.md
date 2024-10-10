@@ -453,12 +453,12 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiering av Samtliga Resurser
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till VPC-tjänsten.**
-3. **Kontrollera Route Tables:**
+1. Logga in på AWS Management Console.
+2. Navigera till VPC-tjänsten.
+3. Kontrollera Route Tables:
    - Välj "Route Tables" i sidomenyn.
    - Bekräfta att `PublicRouteTableUppgift1` finns med en route till `0.0.0.0/0`.
-4. **Kontrollera Subnet Associationer:**
+4. Kontrollera Subnet Associationer:
    - Under "Route Tables", välj `PublicRouteTableUppgift1` och kontrollera att de offentliga subnäten (`PublicSubnetAUppgift1`, `PublicSubnetBUppgift1`, och `PublicSubnetCUppgift1`) är korrekt kopplade.
 
 [Till toppen av denna sektion](#innehållsförteckning-för-vpc-sektionen)
@@ -512,9 +512,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera att säkerhetsgruppen har skapats
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Security Groups:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Security Groups:
    - Välj "Security Groups" i sidomenyn.
    - Bekräfta att `SecurityGroupUppgift1` finns med regler för HTTP och SSH.
 
@@ -535,9 +535,9 @@ Detta kommando gör följande:
 
 ### Verifiera SSH Key Pair på AWS
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Key Pairs:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Key Pairs:
    - Välj "Key Pairs" i sidomenyn under "Network & Security".
    - Bekräfta att `sshkey` finns i listan över nyckelpar.
 
@@ -593,9 +593,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera Launch Template
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Launch Templates:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Launch Templates:
    - Välj "Launch Templates" i sidomenyn under "Instances".
    - Bekräfta att Launch Template med namnet `${AWS::StackName}-LaunchTemplate` finns i listan.
 
@@ -650,9 +650,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera Load Balancer
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Load Balancers:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Load Balancers:
    - Välj "Load Balancers" i sidomenyn under "Load Balancing".
    - Bekräfta att `LoadBalancerUppgift1` finns i listan över load balancers.
 
@@ -711,9 +711,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera Target Group
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Target Groups:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Target Groups:
    - Välj "Target Groups" i sidomenyn under "Load Balancing".
    - Bekräfta att `TargetGroupUppgift1` finns i listan över target groups.
 
@@ -758,9 +758,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera Listener
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Listener:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Listener:
    - Välj "Listeners" i sidomenyn under "Load Balancing" och sedan "Load Balancers".
    - Bekräfta att `LoadBalancerListenerUppgift1` finns listad under den relevanta load balancern.
 
@@ -822,9 +822,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera Auto Scaling Group
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Auto Scaling Groups:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Auto Scaling Groups:
    - Välj "Auto Scaling Groups" i sidomenyn.
    - Bekräfta att `AutoScalingGroupUppgift1` finns i listan över auto scaling-grupper.
 
@@ -871,9 +871,9 @@ aws cloudformation deploy --template-file CloudFormation.yaml --stack-name uppgi
 
 ### Verifiera Scaling Policy
 
-1. **Logga in på AWS Management Console.**
-2. **Navigera till EC2-tjänsten.**
-3. **Kontrollera Scaling Policies:**
+1. Logga in på AWS Management Console.
+2. Navigera till EC2-tjänsten.
+3. Kontrollera Scaling Policies:
    - Välj "Auto Scaling Groups" i sidomenyn.
    - Välj `AutoScalingGroupUppgift1` och navigera till fliken "Scaling Policies".
    - Bekräfta att `ScalingPolicyUppgift1` finns i listan över scaling policies.
