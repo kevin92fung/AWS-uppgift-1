@@ -402,6 +402,7 @@ När dina subnät är skapade, behöver vi skapa en Route Table för att diriger
 Resources:
     # Tidigare definierade resurser...
   ...
+  
   # Skapa Route Table för Public Subnets
   PublicRouteTableUppgift1:
     Type: AWS::EC2::RouteTable
@@ -430,6 +431,7 @@ För att möjliggöra internetåtkomst för resurser i våra offentliga subnät,
 Resources:
     # Tidigare definierade resurser...
   ...
+
   # Skapa en route för Public Subnets
   PublicRouteUppgift1:
     Type: AWS::EC2::Route
@@ -458,6 +460,7 @@ För att säkerställa att våra offentliga subnät kan dirigera trafik enligt d
 Resources:
     # Tidigare definierade resurser...
   ...
+
   # Koppla Public Subnets till Route Table
   PublicSubnetARouteTableAssociationUppgift1:
     Type: AWS::EC2::SubnetRouteTableAssociation
