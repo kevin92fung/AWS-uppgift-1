@@ -137,9 +137,9 @@ Resources:
 
 ## Skapa en VPC
 
-Det vi ska börja med är att skapa en ny VPC för vår hosting-miljö. Detta gör vi genom att beskriva resursen under sektionen för resurser i vår CloudFormation-template.
+Det vi ska börja med är att skapa en ny VPC för vår hosting-miljö. En VPC (Virtual Private Cloud) ger en isolerad miljö där du kan köra dina resurser i AWS. Genom att definiera en VPC kan du styra nätverkskonfigurationer, inklusive IP-adressering, subnät, routing och säkerhet.
 
-Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil:
+Lägg till följande kod under Resources: i din CloudFormation.yaml-fil:
 
 ```yaml
 Resources:
@@ -189,7 +189,10 @@ Detta kommando kommer att ta bort alla resurser som skapats i samband med stacke
 
 ## Skapa en Internet Gateway för VPC:n
 
-När VPC:n är skapad behöver vi också skapa en Internet Gateway för att kunna nå resurser inom vår VPC från internet. En Internet Gateway möjliggör att instanser inom VPC:n kan kommunicera med internet och vice versa. 
+När VPC:n är skapad behöver vi också skapa en Internet Gateway för att kunna nå resurser inom vår VPC från internet. En Internet Gateway möjliggör att instanser inom VPC
+kan kommunicera med internet och vice versa. Utan en Internet Gateway kan inte resurser inom din VPC ta emot trafik från internet, vilket gör det avgörande för att möjliggöra publik åtkomst till dina applikationer och tjänster.
+
+Lägg till följande resurser under Resources: i din CloudFormation.yaml-fil:
 
 Lägg till följande kod under `Resources:` i din `CloudFormation.yaml`-fil, direkt efter VPC-resursen:
 
