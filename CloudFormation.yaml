@@ -1,65 +1,226 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Denna template skapar en säker och skalbar hosting-miljö för en webbapplikation.
 
+Parameters:
+  LatestAmiId:
+    Description: Region specific image from the Parameter Store
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64'
+
 Resources:
   # Skapa VPC
-  Uppgift1VPC:
+  VPCUppgift1:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: Uppgift-1-VPC
+          Value: VPCUppgift1
 
   # Skapa Internet Gateway
-  Uppgift1InternetGateway:
+  InternetGatewayUppgift1:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: Uppgift-1-Internet-Gateway
+          Value: InternetGatewayUppgift1
 
   # Koppla Internet Gateway till VPC
-  Uppgift1AttachGateway:
+  AttachGatewayUppgift1:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref Uppgift1VPC
-      InternetGatewayId: !Ref Uppgift1InternetGateway
-      
+      VpcId: !Ref VPCUppgift1
+      InternetGatewayId: !Ref InternetGatewayUppgift1
+
   # Skapa Public Subnets
-  Uppgift1PublicSubnetA:
+  PublicSubnetAUppgift1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref Uppgift1VPC
+      VpcId: !Ref VPCUppgift1
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: eu-west-1a
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: Uppgift-1-Public-Subnet-A
+          Value: PublicSubnetAUppgift1
 
-  Uppgift1PublicSubnetB:
+  PublicSubnetBUppgift1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref Uppgift1VPC
+      VpcId: !Ref VPCUppgift1
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: eu-west-1b
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: Uppgift-1-Public-Subnet-B
+          Value: PublicSubnetBUppgift1
 
-  Uppgift1PublicSubnetC:
+  PublicSubnetCUppgift1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref Uppgift1VPC
+      VpcId: !Ref VPCUppgift1
       CidrBlock: 10.0.3.0/24
       AvailabilityZone: eu-west-1c
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: Uppgift-1-Public-Subnet-C
+          Value: PublicSubnetCUppgift1
+
+  # Skapa en Route Table för Public Subnets
+  PublicRouteTableUppgift1:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPCUppgift1
+      Tags:
+        - Key: Name
+          Value: PublicRouteTableUppgift1
+
+  # Skapa en route för Public Subnets
+  PublicRouteUppgift1:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGatewayUppgift1
+    Properties:
+      RouteTableId: !Ref PublicRouteTableUppgift1
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGatewayUppgift1
+
+  # Koppla Public Subnets till Route Table
+  PublicSubnetARouteTableAssociationUppgift1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetAUppgift1
+      RouteTableId: !Ref PublicRouteTableUppgift1
+
+  PublicSubnetBRouteTableAssociationUppgift1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetBUppgift1
+      RouteTableId: !Ref PublicRouteTableUppgift1
+
+  PublicSubnetCRouteTableAssociationUppgift1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetCUppgift1
+      RouteTableId: !Ref PublicRouteTableUppgift1
+
+  # Skapa Security Group
+  SecurityGroupUppgift1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH access
+      VpcId: !Ref VPCUppgift1  # Hänvisa till VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  # Tillåt SSH från alla IP-adresser (kan begränsas)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  # Tillåt HTTP från alla IP-adresser (kan begränsas)
+      Tags:
+        - Key: Name
+          Value: SecurityGroupUppgift1
+
+  # Skapa Launch Template
+  LaunchTemplateUppgift1:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateName: !Sub '${AWS::StackName}-LaunchTemplate'  # Dynamiskt namn baserat på stacknamn
+      LaunchTemplateData:
+        InstanceType: t2.micro  # Typ av instans
+        ImageId: !Ref LatestAmiId  # Referens till senaste AMI-ID
+        KeyName: sshtest  # Namnet på ditt SSH-key pair
+        SecurityGroupIds:
+          - !Ref SecurityGroupUppgift1  # Hänvisa till säkerhetsgruppen
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            dnf update && dnf install nginx -y
+            systemctl start nginx
+            systemctl enable nginx
+            dnf install stress -y && dnf install htop -y
+
+  # Skapa Load Balancer
+  LoadBalancerUppgift1:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: LoadBalancerUppgift1
+      Subnets:
+        - !Ref PublicSubnetAUppgift1
+        - !Ref PublicSubnetBUppgift1
+        - !Ref PublicSubnetCUppgift1
+      SecurityGroups:
+        - !Ref SecurityGroupUppgift1
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '60'
+      Tags:
+        - Key: Name
+          Value: LoadBalancerUppgift1
+
+  # Skapa Target Group
+  TargetGroupUppgift1:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: TargetGroupUppgift1
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VPCUppgift1
+      TargetType: instance
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Tags:
+        - Key: Name
+          Value: TargetGroupUppgift1
+      
+  # Skapa Listener för Load Balancer
+  LoadBalancerListenerUppgift1:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupUppgift1
+      LoadBalancerArn: !Ref LoadBalancerUppgift1
+      Port: 80
+      Protocol: HTTP
+    
+  # Skapa Auto Scaling Group
+  AutoScalingGroupUppgift1:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub '${AWS::StackName}-AutoScalingGroup'
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplateUppgift1
+        Version: !GetAtt LaunchTemplateUppgift1.LatestVersionNumber
+      MinSize: '1'
+      MaxSize: '3'
+      DesiredCapacity: '1'
+      VPCZoneIdentifier:
+        - !Ref PublicSubnetAUppgift1
+        - !Ref PublicSubnetBUppgift1
+        - !Ref PublicSubnetCUppgift1
+      TargetGroupARNs:
+        - !Ref TargetGroupUppgift1
+      Tags:
+        - Key: Name
+          Value: AutoScalingGroupUppgift1
+          PropagateAtLaunch: true
+
+  # Skapa Scaling Policy för Auto Scaling Group
+  ScalingPolicyUppgift1:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref AutoScalingGroupUppgift1
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 50.0  # Skala vid 50% CPU-användning
 
 #Outputs:
-  # Anger vad som ska visas som utdata efter att templaten körts
