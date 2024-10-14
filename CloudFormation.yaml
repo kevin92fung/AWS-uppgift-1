@@ -223,37 +223,6 @@ Resources:
       Port: 80
       Protocol: HTTP
     
-  # Skapa Auto Scaling Group
-  AutoScalingGroupUppgift1:
-    Type: AWS::AutoScaling::AutoScalingGroup
-    Properties:
-      AutoScalingGroupName: !Sub '${AWS::StackName}-AutoScalingGroup'
-      LaunchTemplate:
-        LaunchTemplateId: !Ref LaunchTemplateUppgift1
-        Version: !GetAtt LaunchTemplateUppgift1.LatestVersionNumber
-      MinSize: '1'
-      MaxSize: '3'
-      DesiredCapacity: '1'
-      VPCZoneIdentifier:
-        - !Ref PublicSubnetAUppgift1
-        - !Ref PublicSubnetBUppgift1
-        - !Ref PublicSubnetCUppgift1
-      TargetGroupARNs:
-        - !Ref TargetGroupUppgift1
-      Tags:
-        - Key: Name
-          Value: AutoScalingGroupUppgift1
-          PropagateAtLaunch: true
-
-  # Skapa Scaling Policy för Auto Scaling Group
-  ScalingPolicyUppgift1:
-    Type: AWS::AutoScaling::ScalingPolicy
-    Properties:
-      AutoScalingGroupName: !Ref AutoScalingGroupUppgift1
-      PolicyType: TargetTrackingScaling
-      TargetTrackingConfiguration:
-        PredefinedMetricSpecification:
-          PredefinedMetricType: ASGAverageCPUUtilization
-        TargetValue: 50.0  # Skala vid 50% CPU-användning
+3337
 
 #Outputs:

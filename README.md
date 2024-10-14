@@ -569,7 +569,7 @@ Resources:
       LaunchTemplateData:
         InstanceType: t2.micro  # Typ av instans
         ImageId: !Ref LatestAmiId  # Referens till senaste AMI-ID
-        KeyName: sshkey  # Namnet på ditt SSH-key pair
+        KeyName: sshtest  # Namnet på ditt SSH-key pair
         SecurityGroupIds:
           - !Ref SecurityGroupUppgift1  # Hänvisa till säkerhetsgruppen
         UserData:
@@ -578,7 +578,40 @@ Resources:
             dnf update && dnf install nginx -y
             systemctl start nginx
             systemctl enable nginx
-            dnf install stress -y && dnf install htop -y
+
+            
+            cat <<EOF > /usr/share/nginx/html/index.html
+            <!DOCTYPE html>
+            <html lang="sv">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Din sida</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                        text-align: center;
+                        padding: 50px;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Välkommen till din sida!</h1>
+                <p>Detta är en enkel webbsida som visar min personliga sida.</p>
+            </body>
+            </html>
+            EOF
+
+            
+            systemctl reload nginx
+            
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: VMUppgift1
 ```
 
 ### Förklaring av Launch Template-resursen:
