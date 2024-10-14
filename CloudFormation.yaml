@@ -223,6 +223,5 @@ Resources:
       Port: 80
       Protocol: HTTP
     
-3337
 
 #Outputs:
