@@ -223,5 +223,25 @@ Resources:
       Port: 80
       Protocol: HTTP
     
-
+  # Skapa Auto Scaling Group
+  AutoScalingGroupUppgift1:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub '${AWS::StackName}-AutoScalingGroup'
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplateUppgift1
+        Version: !GetAtt LaunchTemplateUppgift1.LatestVersionNumber
+      MinSize: '1'
+      MaxSize: '3'
+      DesiredCapacity: '1'
+      VPCZoneIdentifier:
+        - !Ref PublicSubnetAUppgift1
+        - !Ref PublicSubnetBUppgift1
+        - !Ref PublicSubnetCUppgift1
+      TargetGroupARNs:
+        - !Ref TargetGroupUppgift1
+      Tags:
+        - Key: Name
+          Value: AutoScalingGroupUppgift1
+          PropagateAtLaunch: true
 #Outputs:
